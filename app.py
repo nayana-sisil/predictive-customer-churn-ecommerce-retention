@@ -13,7 +13,6 @@ from sklearn.metrics import (
     precision_recall_curve, roc_curve, auc,
     fbeta_score, accuracy_score, precision_score, recall_score
 )
-import os
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -211,21 +210,15 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Load models and data
-
 @st.cache_resource
 def load_model():
     try:
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        MODEL_PATH = os.path.join(BASE_DIR, "churn_model_final.pkl")
-
-        with open(MODEL_PATH, "rb") as f:
+        with open('churn_model_final.pkl', 'rb') as f:
             model = pickle.load(f)
-
         return model
-    except Exception as e:
-        st.error(f"Model loading failed: {e}")
+    except:
+        st.error("Model file not found. Please ensure 'churn_model_final.pkl' is in the same directory.")
         return None
-
 
 @st.cache_data
 def load_sample_data():
