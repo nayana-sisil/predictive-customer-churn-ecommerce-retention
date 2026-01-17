@@ -18,34 +18,17 @@ warnings.filterwarnings('ignore')
 
 st.set_page_config(
     page_title="E-Commerce Customer Churn Analytics",
-    # page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS to force light mode and override any dark mode settings
+# Theme-aware CSS that works in both light and dark modes
 st.markdown("""
 <style>
-    /* Force light mode by overriding all Streamlit dark mode styles */
-    body {
-        background-color: #ffffff !important;
-        color: #262730 !important;
-    }
-    
-    .stApp {
-        background-color: #ffffff !important;
-    }
-    
-    /* Remove dark mode toggle */
-    [data-testid="stDecoration"] {
-        display: none !important;
-    }
-    
-    /* Main styling - Light mode optimized */
+    /* Main styling - Theme adaptive */
     .main-header {
         font-size: 2.5rem;
         font-weight: 700;
-        color: #2c3e50;
         margin-bottom: 1rem;
         padding-bottom: 0.5rem;
         border-bottom: 3px solid #3498db;
@@ -58,32 +41,28 @@ st.markdown("""
     .section-header {
         font-size: 1.8rem;
         font-weight: 600;
-        color: #2c3e50;
         margin-top: 2rem;
         margin-bottom: 1rem;
         padding-bottom: 0.3rem;
-        border-bottom: 2px solid #e0e0e0;
+        border-bottom: 2px solid rgba(128, 128, 128, 0.3);
     }
     
     .subsection-header {
         font-size: 1.4rem;
         font-weight: 600;
-        color: #34495e;
         margin-top: 1.5rem;
         margin-bottom: 0.8rem;
         padding-left: 10px;
         border-left: 4px solid #3498db;
     }
     
-    /* Cards with light theme */
+    /* Cards - Theme adaptive */
     .metric-card {
-        background-color: #ffffff;
         padding: 1.2rem;
         border-radius: 10px;
         border-left: 4px solid #3498db;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         margin-bottom: 1rem;
-        border: 1px solid #e0e0e0;
         transition: transform 0.2s ease;
     }
     
@@ -92,70 +71,57 @@ st.markdown("""
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
     
+    /* Highlight cards with proper text color */
     .highlight-card {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
         padding: 1.5rem;
         border-radius: 10px;
         margin-bottom: 1rem;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     
-    /* Fixed Tabs styling - Light theme */
+    .highlight-card h3,
+    .highlight-card p {
+        color: white !important;
+    }
+    
+    /* Tabs styling - Theme adaptive */
     .stTabs [data-baseweb="tab-list"] {
         gap: 2px;
-        background-color: transparent;
         padding: 0;
         margin-bottom: 1.5rem;
-        border-bottom: 2px solid #e0e0e0;
     }
     
     .stTabs [data-baseweb="tab"] {
         height: 45px;
         white-space: nowrap;
-        background-color: #f8f9fa;
         border-radius: 8px 8px 0 0;
         padding: 0 20px;
         margin-right: 2px;
-        border: 1px solid #e0e0e0;
-        border-bottom: none;
-        color: #34495e;
         font-weight: 500;
         transition: all 0.3s ease;
-    }
-    
-    .stTabs [data-baseweb="tab"]:hover {
-        background-color: #e3f2fd;
-        color: #2c3e50;
     }
     
     .stTabs [aria-selected="true"] {
         background-color: #3498db !important;
         color: white !important;
-        border-color: #3498db !important;
         font-weight: 600;
     }
     
-    /* Plot containers */
+    /* Plot containers - Theme adaptive */
     .plot-container {
-    background-color: #ffffff;
-    padding: 16px;
-    border-radius: 10px;
-    border-left: 4px solid #3498db;
-    border-top: 1px solid #e0e0e0;
-    border-right: 1px solid #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
-    box-shadow: none;
-    margin-bottom: 1.5rem;
-}
-
+        padding: 16px;
+        border-radius: 10px;
+        border-left: 4px solid #3498db;
+        margin-bottom: 1.5rem;
+    }
     
-    /* Financial assessment styling */
+    /* Financial assessment styling - Theme adaptive */
     .savings-positive {
         color: #27ae60;
         font-weight: bold;
         font-size: 1.2rem;
-        background-color: #d4edda;
+        background-color: rgba(39, 174, 96, 0.15);
         padding: 5px 10px;
         border-radius: 5px;
         display: inline-block;
@@ -165,40 +131,39 @@ st.markdown("""
         color: #e74c3c;
         font-weight: bold;
         font-size: 1.2rem;
-        background-color: #f8d7da;
+        background-color: rgba(231, 76, 60, 0.15);
         padding: 5px 10px;
         border-radius: 5px;
         display: inline-block;
     }
     
-    /* Sidebar styling */
-    .css-1d391kg {
-        background-color: #f8f9fa !important;
-        border-right: 1px solid #e0e0e0;
+    /* Remove backgrounds from widgets to inherit theme */
+    [data-testid="stNumberInput"],
+    [data-testid="stSlider"],
+    [data-testid="stRadio"],
+    [data-testid="stPlotlyChart"],
+    .stForm {
+        background-color: transparent !important;
     }
     
-    /* Form elements */
-    .stSlider, .stSelectbox, .stNumberInput {
-        background-color: white !important;
+    [data-testid="stNumberInput"] > div,
+    [data-testid="stSlider"] > div,
+    [data-testid="stRadio"] > div,
+    [data-testid="stPlotlyChart"] > div {
+        background-color: transparent !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
     }
     
-    /* Input fields */
-    .stTextInput > div > div > input,
-    .stNumberInput > div > div > input,
-    .stTextArea > div > div > textarea {
-        background-color: white !important;
-        color: #262730 !important;
-        border: 1px solid #ced4da !important;
+    [data-testid="stNumberInput"] > div > div,
+    [data-testid="stSlider"] > div > div {
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
     }
     
-    /* Dataframe styling */
-    .dataframe {
-        font-size: 0.9rem;
-        color: #262730 !important;
-        background-color: white !important;
-        border: 1px solid #e0e0e0 !important;
-    }
-    
+    /* Dataframe styling - Theme adaptive */
     .dataframe th {
         background-color: #3498db !important;
         color: white !important;
@@ -209,27 +174,6 @@ st.markdown("""
     
     .dataframe td {
         padding: 10px 15px;
-        border-bottom: 1px solid #e0e0e0;
-    }
-    
-    .dataframe tr:hover {
-        background-color: #f8f9fa;
-    }
-    
-    /* Confusion matrix container */
-    .confusion-matrix-container {
-        max-width: 600px;
-        margin: 0 auto;
-        background-color: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e0e0e0;
-    }
-    
-    /* Spacing */
-    .spacing {
-        margin-top: 2rem;
     }
     
     /* Button styling */
@@ -249,69 +193,12 @@ st.markdown("""
         box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
     }
     
-    /* Alert boxes */
-    .stAlert {
-        border-radius: 8px;
-        border: 1px solid;
+    /* Spacing */
+    .spacing {
+        margin-top: 2rem;
     }
     
-    .stAlert [data-baseweb="notification"] {
-        border-radius: 8px;
-    }
-    
-    /* Radio buttons and checkboxes */
-    .stRadio > div {
-        background-color: white;
-        padding: 15px;
-        border-radius: 8px;
-        border: 1px solid #e0e0e0;
-    }
-    
-    /* Metric styling */
-    .stMetric {
-        background-color: white;
-        padding: 15px;
-        border-radius: 8px;
-        border: 1px solid #e0e0e0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-    
-    /* Ensure all text is visible in light mode */
-    * {
-        color: #262730 !important;
-    }
-    
-    p, h1, h2, h3, h4, h5, h6, span, div {
-        color: #262730 !important;
-    }
-    
-    /* Override any Streamlit dark mode text */
-    .stMarkdown, .stText, .stWrite {
-        color: #262730 !important;
-    }
-    
-    /* Force sidebar text color */
-    .css-1d391kg p,
-    .css-1d391kg h1,
-    .css-1d391kg h2,
-    .css-1d391kg h3,
-    .css-1d391kg label {
-        color: #262730 !important;
-    }
-    
-    /* Plotly chart background override */
-    .js-plotly-plot .plotly {
-        background-color: white !important;
-    }
-    
-    /* Table of contents styling */
-    .stToc {
-        background-color: white;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-    }
-    
-    /* Fix for markdown text formatting */
+    /* Markdown text formatting */
     .markdown-text {
         line-height: 1.6;
         margin-bottom: 1rem;
@@ -325,110 +212,13 @@ st.markdown("""
     .markdown-text li {
         margin-bottom: 0.5rem;
     }
-
-
-
-[data-testid="stNumberInput"] {
-    background-color: transparent !important;
-}
-
-[data-testid="stNumberInput"] > div {
-    background-color: transparent !important;
-    padding: 0 !important;
-}
-
-[data-testid="stNumberInput"] > div > div {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-[data-testid="stNumberInput"] input {
-    background-color: white !important;
-    border: 1px solid #ced4da !important;
-    border-radius: 4px !important;
-    padding: 0.5rem !important;
-}
-
-
-[data-testid="stSlider"] {
-    background-color: transparent !important;
-}
-
-[data-testid="stSlider"] > div {
-    background-color: transparent !important;
-    padding: 0 !important;
-}
-
-[data-testid="stSlider"] > div > div {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-
-[data-testid="stPlotlyChart"] {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-[data-testid="stPlotlyChart"] > div {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-.modebar {
-    background-color: transparent !important;
-}
-
-
-[data-testid="stRadio"] > div {
-    background-color: transparent !important;
-    padding: 0.5rem 0 !important;
-    border: none !important;
-}
-
-
-.stForm {
-    background-color: transparent !important;
-    border: none !important;
-}
-
-[data-testid="stSidebar"] [data-testid="stNumberInput"],
-[data-testid="stSidebar"] [data-testid="stSlider"],
-[data-testid="stSidebar"] [data-testid="stRadio"] {
-    background-color: transparent !important;
-}
-
-/* Remove any default Streamlit widget backgrounds */
-[data-testid="stSidebar"] .stNumberInput,
-[data-testid="stSidebar"] .stSlider,
-[data-testid="stSidebar"] .stRadio {
-    background-color: transparent !important;
-}
-
-
-[data-testid="stMetricValue"] {
-    background-color: transparent !important;
-}
-
-
-/* Force remove all widget containers backgrounds */
-[data-baseweb="input"],
-[data-baseweb="slider"],
-[data-baseweb="radio"] {
-    background-color: transparent !important;
-}
-
-/* Remove any residual borders */
-.st-emotion-cache-* {
-    border: none !important;
-}
-
-
-
+    
+    /* Remove forced color overrides - let Streamlit handle theme colors */
+    [data-baseweb="input"],
+    [data-baseweb="slider"],
+    [data-baseweb="radio"] {
+        background-color: transparent !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -475,17 +265,21 @@ def load_sample_data():
     
     return df
 
+# Helper function to get theme-aware plot template
+def get_plot_template():
+    return 'plotly_white'
+
 # Load model and data
 model = load_model()
 df = load_sample_data()
 
-# Sidebar navigation with light theme styling
+# Sidebar navigation
 with st.sidebar:
     st.markdown("""
     <div style='text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                 color: white; border-radius: 10px; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);'>
-        <h3 style='margin: 0; font-size: 1.5rem;'>E-Commerce Analytics</h3>
-        <p style='margin: 0; font-size: 0.9rem; opacity: 0.9;'>Customer Churn Prediction</p>
+        <h3 style='margin: 0; font-size: 1.5rem; color: white;'>E-Commerce Analytics</h3>
+        <p style='margin: 0; font-size: 0.9rem; opacity: 0.9; color: white;'>Customer Churn Prediction</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -538,29 +332,26 @@ with st.sidebar:
     
     st.markdown("---")
     st.markdown("""
-    <div style='text-align: center; color: #7f8c8d; font-size: 0.8rem;'>
+    <div style='text-align: center; opacity: 0.7; font-size: 0.8rem;'>
         Built for Customer Experience Optimization
     </div>
     """, unsafe_allow_html=True)
 
 # Main content area
 if page == "Business Overview":
-    st.markdown('<div class="main-header">E Commerce Customer Churn Analytics</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header">E-Commerce Customer Churn Analytics</div>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        # st.markdown('<div class="metric-card">', unsafe_allow_html=True)
         st.metric(
             "Current Churn Rate",
             f"{df['Churn'].mean()*100:.1f}%",
             delta=f"-{5.2:.1f}% target",
             delta_color="inverse"
         )
-        # st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
-        # st.markdown('<div class="metric-card">', unsafe_allow_html=True)
         revenue_at_risk = df['Churn'].sum() * customer_lifetime_value
         st.metric(
             "Revenue at Risk",
@@ -568,52 +359,36 @@ if page == "Business Overview":
             delta=f"-Rs.{(revenue_at_risk * 0.3):,.0f}",
             delta_color="inverse"
         )
-        # st.markdown('</div>', unsafe_allow_html=True)
     
     with col3:
-        # st.markdown('<div class="metric-card">', unsafe_allow_html=True)
         st.metric(
             "Model Coverage",
             "88.9%",
             "Recall Score",
             delta_color="normal"
         )
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # st.markdown('<div class="section-header">Business Context</div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns([2, 1])
     
-    
     with col1:
+        st.markdown("### Challenge")
+        st.write("The e-commerce platform has experienced significant user growth but faces increasing customer churn. Current retention strategies lack personalization and data-driven targeting, reducing their effectiveness.")
+        
+        st.markdown("### Solution")
         st.markdown("""
-        <div style='background-color: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #3498db;'>
-
-        <h3>Challenge</h3>
-        <p>
-        The e commerce platform has experienced significant user growth but faces increasing customer churn.
-        Current retention strategies lack personalization and data-driven targeting, reducing their effectiveness.
-        </p>
-
-        <h3>Solution</h3>
-        <ul>
-            <li>Targeted retention campaigns</li>
-            <li>Personalized offers and recommendations</li>
-            <li>Optimized marketing resource allocation</li>
-            <li>Proactive customer engagement</li>
-        </ul>
-
-        <h3>Business Impact</h3>
-        <ol>
-            <li>Improve customer loyalty and lifetime value</li>
-            <li>Reduce marketing spend waste</li>
-            <li>Increase retention campaign effectiveness</li>
-            <li>Enhance overall customer experience</li>
-        </ol>
-
-        </div>
-        """, unsafe_allow_html=True)
-    
+        - Targeted retention campaigns
+        - Personalized offers and recommendations
+        - Optimized marketing resource allocation
+        - Proactive customer engagement
+        """)
+        
+        st.markdown("### Business Impact")
+        st.markdown("""
+        1. Improve customer loyalty and lifetime value
+        2. Reduce marketing spend waste
+        3. Increase retention campaign effectiveness
+        4. Enhance overall customer experience
+        """)
     
     with col2:
         # Quick churn distribution
@@ -632,8 +407,7 @@ if page == "Business Overview":
             height=300,
             showlegend=False,
             margin=dict(t=50, b=0, l=0, r=0),
-            plot_bgcolor='white',
-            paper_bgcolor='white'
+            template=get_plot_template()
         )
         st.plotly_chart(fig, use_container_width=True)
         
@@ -674,26 +448,19 @@ if page == "Business Overview":
         height=600,
         showlegend=True,
         bargap=0.1,
-        plot_bgcolor='white',
-        paper_bgcolor='white',
-        font=dict(color='#262730')
+        template=get_plot_template()
     )
-    
-    for i in fig['layout']['annotations']:
-        i['font'] = dict(size=12, color='#2c3e50')
     
     st.plotly_chart(fig, use_container_width=True)
 
 elif page == "Model Analysis":
     st.markdown('<div class="main-header">Model Performance Analysis</div>', unsafe_allow_html=True)
     
-    # Create tabs with proper spacing
-    st.markdown('<div class="tab-content">', unsafe_allow_html=True)
     tab1, tab2, tab3, tab4 = st.tabs([
-        " Performance Metrics", 
-        " Feature Importance", 
-        " Confusion Analysis", 
-        " Model Comparison"
+        "📊 Performance Metrics", 
+        "🎯 Feature Importance", 
+        "🔍 Confusion Analysis", 
+        "📈 Model Comparison"
     ])
     
     with tab1:
@@ -720,10 +487,8 @@ elif page == "Model Analysis":
         with col1:
             st.markdown("#### Numerical Metrics")
             st.dataframe(
-                perf_df.style.format({'Value': '{:.3f}'})
-                .background_gradient(subset=['Value'], cmap='Blues'),
-                use_container_width=True,
-                # height=300
+                perf_df.style.format({'Value': '{:.3f}'}),
+                use_container_width=True
             )
         
         with col2:
@@ -742,28 +507,20 @@ elif page == "Model Analysis":
                 yaxis_title='Score',
                 yaxis_range=[0, 1],
                 height=400,
-                plot_bgcolor='white',
-                paper_bgcolor='white',
-                font=dict(color='#262730')
+                template=get_plot_template()
             )
             fig.update_xaxes(tickangle=45)
             st.plotly_chart(fig, use_container_width=True)
         
         st.markdown('<div class="subsection-header">F2-Score Justification</div>', unsafe_allow_html=True)
-        st.markdown("""
-        <div class="markdown-text" style='background-color: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #3498db;'>
+        st.info("""
         The F2-score (β=2) is optimized as the primary metric because:
         
-        1. **Business Priority**: Missing a churning customer (false negative) costs significantly more than 
-           an unnecessary retention offer (false positive)
-        
+        1. **Business Priority**: Missing a churning customer (false negative) costs significantly more than an unnecessary retention offer (false positive)
         2. **Recall Focus**: Gives twice the weight to recall compared to precision
-        
         3. **Cost Sensitivity**: Aligns with business goal of aggressively reducing churn
-        
         4. **Resource Optimization**: Enables effective intervention on high-risk customers
-        </div>
-        """, unsafe_allow_html=True)
+        """)
     
     with tab2:
         st.markdown('<div class="subsection-header">Feature Importance Analysis</div>', unsafe_allow_html=True)
@@ -773,16 +530,13 @@ elif page == "Model Analysis":
             'Feature': [
                 'CashbackAmount', 'WarehouseToHome', 'Tenure', 'DaySinceLastOrder',
                 'NumberOfAddress', 'SatisfactionScore', 'NumberOfDeviceRegistered',
-                'Complain', 'MaritalStatus_Single', 'MaritalStatus_Married',
-                'PreferedOrderCat_Laptop', 'PreferedOrderCat_Fashion',
-                'PreferedOrderCat_Mobile', 'PreferedOrderCat_Others',
-                'MaritalStatus_Divorced', 'PreferedOrderCat_Grocery'
+                'Complain', 'MaritalStatus_Single', 'MaritalStatus_Married'
             ],
-            'Importance': [1240, 911, 663, 585, 377, 346, 261, 116, 111, 68, 59, 56, 42, 29, 22, 14]
+            'Importance': [1240, 911, 663, 585, 377, 346, 261, 116, 111, 68]
         }
         
         fi_df = pd.DataFrame(feature_importance)
-        fi_df = fi_df.sort_values('Importance', ascending=True).tail(10)
+        fi_df = fi_df.sort_values('Importance', ascending=True)
         
         # Create feature importance plot
         fig = go.Figure(data=[
@@ -800,51 +554,39 @@ elif page == "Model Analysis":
             title='Top 10 Most Important Features',
             xaxis_title='Importance Score',
             height=500,
-            plot_bgcolor='white',
-            paper_bgcolor='white',
-            font=dict(color='#262730')
+            template=get_plot_template()
         )
         
         st.plotly_chart(fig, use_container_width=True)
         
-        # Feature insights in columns
         col1, col2 = st.columns(2)
         
         with col1:
-            # st.markdown("#### Key Insights")
+            st.markdown("### Key Insights")
             st.markdown("""
-            ### Key Insights
-
             - **CashbackAmount**: Most influential feature – incentives strongly affect retention  
             - **WarehouseToHome**: Delivery distance impacts customer satisfaction  
             - **Tenure**: Longer-tenured customers are more loyal  
             - **Recent Activity**: *DaySinceLastOrder* is critical for churn prediction
             """)
-
         
         with col2:
-            st.markdown("#### Business Implications")
+            st.markdown("### Business Implications")
             st.markdown("""
-            <div style="background-color:#f8f9fa; padding:15px; border-radius:10px;">
-                <ol>
-                    <li><strong>Enhance Loyalty Programs</strong>: Focus on cashback and rewards</li>
-                    <li><strong>Optimize Logistics</strong>: Reduce delivery distance impact</li>
-                    <li><strong>Early Intervention</strong>: Target new customers with onboarding</li>
-                    <li><strong>Proactive Engagement</strong>: Monitor recent purchase patterns</li>
-                </ol>
-            </div>
-            """, unsafe_allow_html=True)
-
+            1. **Enhance Loyalty Programs**: Focus on cashback and rewards
+            2. **Optimize Logistics**: Reduce delivery distance impact
+            3. **Early Intervention**: Target new customers with onboarding
+            4. **Proactive Engagement**: Monitor recent purchase patterns
+            """)
     
     with tab3:
         st.markdown('<div class="subsection-header">Confusion Matrix Analysis</div>', unsafe_allow_html=True)
         
-        # Create a centered confusion matrix
         col1, col2, col3 = st.columns([1, 3, 1])
         
         with col2:
             # Simulated confusion matrix
-            cm = np.array([[503, 44], [12, 95]])  # Example values
+            cm = np.array([[503, 44], [12, 95]])
             
             fig = go.Figure(data=go.Heatmap(
                 z=cm,
@@ -853,7 +595,7 @@ elif page == "Model Analysis":
                 colorscale='Blues',
                 text=cm,
                 texttemplate='%{text}',
-                textfont={"size": 16, "color": "white"},
+                textfont={"size": 16},
                 hoverongaps=False
             ))
             
@@ -863,9 +605,7 @@ elif page == "Model Analysis":
                 width=500,
                 xaxis_title='Predicted',
                 yaxis_title='Actual',
-                plot_bgcolor='white',
-                paper_bgcolor='white',
-                font=dict(color='#262730')
+                template=get_plot_template()
             )
             
             st.plotly_chart(fig, use_container_width=True)
@@ -878,16 +618,16 @@ elif page == "Model Analysis":
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
-            st.metric("True Positives", tp, "Correct churn predictions", delta_color="off")
+            st.metric("True Positives", tp, "Correct churn predictions")
         
         with col2:
-            st.metric("False Positives", fp, "Incorrect churn predictions", delta_color="off")
+            st.metric("False Positives", fp, "Incorrect churn predictions")
         
         with col3:
-            st.metric("False Negatives", fn, "Missed churners", delta_color="off")
+            st.metric("False Negatives", fn, "Missed churners")
         
         with col4:
-            st.metric("True Negatives", tn, "Correct non-churn predictions", delta_color="off")
+            st.metric("True Negatives", tn, "Correct non-churn predictions")
         
         st.markdown('<div class="subsection-header">Error Analysis</div>', unsafe_allow_html=True)
         
@@ -924,7 +664,6 @@ elif page == "Model Analysis":
     with tab4:
         st.markdown('<div class="subsection-header">Model Comparison</div>', unsafe_allow_html=True)
         
-        # Model comparison data
         models_comparison = {
             'Model': ['LightGBM + RandomOverSampler', 'XGBoost + RandomOverSampler', 
                      'Logistic Regression + NearMiss', 'Random Forest + Class Weight',
@@ -937,18 +676,14 @@ elif page == "Model Analysis":
         
         comp_df = pd.DataFrame(models_comparison)
         
-        # Apply styling but don't use background_gradient on string columns
-        styled_df = comp_df.style.format({
-            'F2-Score': '{:.3f}', 
-            'Recall': '{:.3f}', 
-            'Precision': '{:.3f}', 
-            'Training Time (s)': '{:.1f}'
-        })
-        
         st.dataframe(
-            styled_df,
-            use_container_width=True,
-            # height=300
+            comp_df.style.format({
+                'F2-Score': '{:.3f}', 
+                'Recall': '{:.3f}', 
+                'Precision': '{:.3f}', 
+                'Training Time (s)': '{:.1f}'
+            }),
+            use_container_width=True
         )
         
         # Visualization
@@ -967,7 +702,7 @@ elif page == "Model Analysis":
             ),
             text=comp_df['Model'],
             textposition='top center',
-            textfont=dict(size=10, color='#262730')
+            textfont=dict(size=10)
         ))
         
         fig.update_layout(
@@ -975,19 +710,14 @@ elif page == "Model Analysis":
             xaxis_title='Recall',
             yaxis_title='Precision',
             height=500,
-            plot_bgcolor='white',
-            paper_bgcolor='white',
-            font=dict(color='#262730')
+            template=get_plot_template()
         )
         
         st.plotly_chart(fig, use_container_width=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)  # Close tab-content
 
 elif page == "Churn Prediction":
     st.markdown('<div class="main-header">Customer Churn Prediction</div>', unsafe_allow_html=True)
     
-    # Prediction interface
     col1, col2 = st.columns([2, 1])
     
     with col1:
@@ -1018,7 +748,6 @@ elif page == "Churn Prediction":
     with col2:
         st.markdown('<div class="subsection-header">Quick Insights</div>', unsafe_allow_html=True)
         
-        # Display risk factors with proper HTML formatting
         risk_factors = []
         
         if tenure < 5:
@@ -1040,23 +769,19 @@ elif page == "Churn Prediction":
             st.success("#### No Major Risk Factors")
             st.markdown("Customer profile shows good retention indicators")
         
-        # Feature importance reminder
         st.markdown("---")
         st.markdown("#### Top Churn Indicators")
         st.markdown("""
-        <div class="markdown-text">
         1. Low cashback amount
         2. Recent complaints
         3. Short customer tenure
         4. High warehouse distance
         5. Recent inactivity
-        </div>
-        """, unsafe_allow_html=True)
+        """)
     
     if predict_button:
         st.markdown('<div class="section-header">Prediction Results</div>', unsafe_allow_html=True)
         
-        # Prepare input data
         input_data = {
             'Tenure': tenure,
             'WarehouseToHome': warehouse_to_home,
@@ -1097,20 +822,20 @@ elif page == "Churn Prediction":
             # Display prediction
             if churn_prediction:
                 st.markdown(f"""
-                <div style='text-align: center; padding: 2rem; background-color: #f8d7da; 
+                <div style='text-align: center; padding: 2rem; background-color: rgba(231, 76, 60, 0.15); 
                             border-radius: 10px; border: 2px solid #dc3545; margin-top: 20px;'>
-                    <h1 style='color: #721c24; margin: 0;'>⚠️</h1>
-                    <h2 style='color: #721c24; margin: 1rem 0;'>HIGH CHURN RISK</h2>
-                    <p style='color: #721c24; font-size: 1.2rem;'>Probability: {churn_probability:.1%}</p>
+                    <h1 style='margin: 0;'>⚠️</h1>
+                    <h2 style='color: #dc3545; margin: 1rem 0;'>HIGH CHURN RISK</h2>
+                    <p style='font-size: 1.2rem;'>Probability: {churn_probability:.1%}</p>
                 </div>
                 """, unsafe_allow_html=True)
             else:
                 st.markdown(f"""
-                <div style='text-align: center; padding: 2rem; background-color: #d4edda; 
+                <div style='text-align: center; padding: 2rem; background-color: rgba(39, 174, 96, 0.15); 
                             border-radius: 10px; border: 2px solid #28a745; margin-top: 20px;'>
-                    <h1 style='color: #155724; margin: 0;'>✅</h1>
-                    <h2 style='color: #155724; margin: 1rem 0;'>LOW CHURN RISK</h2>
-                    <p style='color: #155724; font-size: 1.2rem;'>Probability: {churn_probability:.1%}</p>
+                    <h1 style='margin: 0;'>✅</h1>
+                    <h2 style='color: #28a745; margin: 1rem 0;'>LOW CHURN RISK</h2>
+                    <p style='font-size: 1.2rem;'>Probability: {churn_probability:.1%}</p>
                 </div>
                 """, unsafe_allow_html=True)
         
@@ -1121,15 +846,15 @@ elif page == "Churn Prediction":
             mode="gauge+number",
             value=churn_probability * 100,
             domain={'x': [0, 1], 'y': [0, 1]},
-            title={'text': "Churn Risk Score", 'font': {'size': 24, 'color': '#262730'}},
-            number={'suffix': '%', 'font': {'size': 40, 'color': '#262730'}},
+            title={'text': "Churn Risk Score", 'font': {'size': 24}},
+            number={'suffix': '%', 'font': {'size': 40}},
             gauge={
-                'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': '#262730'},
+                'axis': {'range': [None, 100], 'tickwidth': 1},
                 'bar': {'color': "#e74c3c" if churn_prediction else "#27ae60"},
                 'steps': [
-                    {'range': [0, 30], 'color': "#d4edda"},
-                    {'range': [30, 70], 'color': "#fff3cd"},
-                    {'range': [70, 100], 'color': "#f8d7da"}
+                    {'range': [0, 30], 'color': "rgba(39, 174, 96, 0.2)"},
+                    {'range': [30, 70], 'color': "rgba(255, 193, 7, 0.2)"},
+                    {'range': [70, 100], 'color': "rgba(231, 76, 60, 0.2)"}
                 ],
                 'threshold': {
                     'line': {'color': "red", 'width': 4},
@@ -1141,8 +866,7 @@ elif page == "Churn Prediction":
         
         fig.update_layout(
             height=300,
-            paper_bgcolor='white',
-            font=dict(color='#262730')
+            template=get_plot_template()
         )
         st.plotly_chart(fig, use_container_width=True)
         
@@ -1153,8 +877,7 @@ elif page == "Churn Prediction":
             col1, col2 = st.columns(2)
             
             with col1:
-                st.markdown(f"""
-                <div style='background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #e0e0e0;'>
+                st.info(f"""
                 **Immediate Actions (Within 24 hours):**
                 
                 - Personal outreach from customer success
@@ -1163,12 +886,10 @@ elif page == "Churn Prediction":
                 - Follow-up call scheduled
                 
                 **Expected Cost:** Rs.{retention_offer_cost:,}
-                </div>
-                """, unsafe_allow_html=True)
+                """)
             
             with col2:
-                st.markdown(f"""
-                <div style='background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #e0e0e0;'>
+                st.info(f"""
                 **Strategic Actions (Next 7 days):**
                 
                 - Review complaint history
@@ -1177,8 +898,7 @@ elif page == "Churn Prediction":
                 - Monitor engagement metrics
                 
                 **Potential Savings:** Rs.{customer_lifetime_value:,}
-                </div>
-                """, unsafe_allow_html=True)
+                """)
         else:
             st.info("""
             **Maintenance Actions:**
@@ -1341,17 +1061,14 @@ elif page == "Financial Assessment":
     fig.update_layout(
         height=500,
         showlegend=True,
-        plot_bgcolor='white',
-        paper_bgcolor='white',
-        font=dict(color='#262730')
+        template=get_plot_template()
     )
     
     st.plotly_chart(fig, use_container_width=True)
     
-    # Detailed breakdown - FIXED VERSION
+    # Detailed breakdown
     st.markdown('<div class="subsection-header">Detailed Breakdown</div>', unsafe_allow_html=True)
     
-    # Create breakdown data WITHOUT percentage in numeric columns
     breakdown_data = {
         'Metric': [
             'Actual Churners',
@@ -1359,8 +1076,7 @@ elif page == "Financial Assessment":
             'True Positives',
             'False Positives',
             'False Negatives',
-            'Successful Retentions',
-            'Retention Success Rate (%)'  # Note: This will be string, not numeric
+            'Successful Retentions'
         ],
         'Count': [
             actual_churners,
@@ -1368,8 +1084,7 @@ elif page == "Financial Assessment":
             true_positives,
             false_positives,
             false_negatives,
-            int(true_positives * retention_success_rate),
-            retention_success_rate * 100  # Keep as float for display
+            int(true_positives * retention_success_rate)
         ],
         'Description': [
             'Customers who would churn without intervention',
@@ -1377,23 +1092,14 @@ elif page == "Financial Assessment":
             'Correctly identified churners',
             'Loyal customers receiving unnecessary offers',
             'Churners missed by the model',
-            'Customers retained through intervention',
-            'Effectiveness of retention offers'
+            'Customers retained through intervention'
         ]
     }
     
     breakdown_df = pd.DataFrame(breakdown_data)
     
-    # Format the percentage column properly
-    breakdown_df_display = breakdown_df.copy()
-    breakdown_df_display['Count'] = breakdown_df_display.apply(
-        lambda row: f"{row['Count']:.1f}%" if 'Retention Success Rate' in row['Metric'] else f"{int(row['Count']):,}",
-        axis=1
-    )
-    
-    # Display the dataframe WITHOUT gradient (which was causing the error)
     st.dataframe(
-        breakdown_df_display,
+        breakdown_df.style.format({'Count': '{:,}'}),
         use_container_width=True,
         height=300
     )
@@ -1427,9 +1133,7 @@ elif page == "Financial Assessment":
             xaxis_title='Retention Success Rate (%)',
             yaxis_title='Net Savings (Rs.)',
             height=300,
-            plot_bgcolor='white',
-            paper_bgcolor='white',
-            font=dict(color='#262730')
+            template=get_plot_template()
         )
         st.plotly_chart(fig, use_container_width=True)
     
@@ -1439,7 +1143,6 @@ elif page == "Financial Assessment":
         savings_by_precision = []
         
         for prec in precisions:
-            # Simplified calculation
             fp_rate = 1 - prec
             fp = int((num_customers - actual_churners) * fp_rate)
             intervention = (true_positives + fp) * retention_offer_cost
@@ -1460,9 +1163,7 @@ elif page == "Financial Assessment":
             xaxis_title='Model Precision (%)',
             yaxis_title='Net Savings (Rs.)',
             height=300,
-            plot_bgcolor='white',
-            paper_bgcolor='white',
-            font=dict(color='#262730')
+            template=get_plot_template()
         )
         st.plotly_chart(fig, use_container_width=True)
     
@@ -1472,24 +1173,19 @@ elif page == "Financial Assessment":
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.markdown(f"""
-        <div style='background-color: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #e0e0e0;'>
-        
+        st.info(f"""
+        **Return on Investment**
         
         For every Rs.{retention_offer_cost:,} spent on retention offers:
         
         → **Rs.{int(customer_lifetime_value * retention_success_rate / retention_offer_cost):,} saved**
         
         **ROI: {roi:.0f}%**
-        </div>
-        """, unsafe_allow_html=True)
-
-    
+        """)
     
     with col2:
-        st.markdown(f"""
-        <div style='background-color: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #e0e0e0;'>
-        
+        st.info(f"""
+        **Model Coverage**
         
         Model identifies:
         
@@ -1498,14 +1194,12 @@ elif page == "Financial Assessment":
         Misses only **{false_negatives}** high-value customers
         
         **Coverage: Excellent**
-        </div>
-        """, unsafe_allow_html=True)
+        """)
     
     with col3:
         efficiency = true_positives / (true_positives + false_positives) if (true_positives + false_positives) > 0 else 0
-        st.markdown(f"""
-        <div style='background-color: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #e0e0e0;'>
-        
+        st.info(f"""
+        **Campaign Efficiency**
         
         Retention offers are:
         
@@ -1514,18 +1208,14 @@ elif page == "Financial Assessment":
         **{false_positives}** unnecessary offers
         
         **Efficiency: {'Good' if efficiency > 0.6 else 'Needs Improvement'}**
-        </div>
-        """, unsafe_allow_html=True)
+        """)
 
 # Footer
 st.markdown("---")
 col1, col2, col3 = st.columns([2, 1, 2])
-
 with col2:
     st.markdown("""
-    <div style='text-align: center; color: #7f8c8d; font-size: 0.9rem; padding: 1rem; 
-                background-color: #f8f9fa; border-radius: 8px; border: 1px solid #e0e0e0;'>
-        <p style='margin: 0;'><strong>E-Commerce Customer Churn Prediction Dashboard</strong></p>
-        <p style='margin: 0; font-size: 0.8rem;'>Built with Streamlit • Optimized for F₂-Score</p>
+    <div style='text-align: center; opacity: 0.6; font-size: 0.85rem;'>
+        E-Commerce Churn Analytics Dashboard
     </div>
     """, unsafe_allow_html=True)
