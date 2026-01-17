@@ -22,10 +22,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Theme-aware CSS that works in both light and dark modes
 st.markdown("""
 <style>
-    /* Main styling - Theme adaptive */
     .main-header {
         font-size: 2.5rem;
         font-weight: 700;
@@ -56,7 +54,6 @@ st.markdown("""
         border-left: 4px solid #3498db;
     }
     
-    /* Cards - Theme adaptive */
     .metric-card {
         padding: 1.2rem;
         border-radius: 10px;
@@ -71,7 +68,6 @@ st.markdown("""
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
     
-    /* Highlight cards with proper text color */
     .highlight-card {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         padding: 1.5rem;
@@ -85,7 +81,6 @@ st.markdown("""
         color: white !important;
     }
     
-    /* Tabs styling - Theme adaptive */
     .stTabs [data-baseweb="tab-list"] {
         gap: 2px;
         padding: 0;
@@ -108,7 +103,6 @@ st.markdown("""
         font-weight: 600;
     }
     
-    /* Plot containers - Theme adaptive */
     .plot-container {
         padding: 16px;
         border-radius: 10px;
@@ -116,7 +110,6 @@ st.markdown("""
         margin-bottom: 1.5rem;
     }
     
-    /* Financial assessment styling - Theme adaptive */
     .savings-positive {
         color: #27ae60;
         font-weight: bold;
@@ -137,7 +130,6 @@ st.markdown("""
         display: inline-block;
     }
     
-    /* Remove backgrounds from widgets to inherit theme */
     [data-testid="stNumberInput"],
     [data-testid="stSlider"],
     [data-testid="stRadio"],
@@ -163,7 +155,6 @@ st.markdown("""
         box-shadow: none !important;
     }
     
-    /* Dataframe styling - Theme adaptive */
     .dataframe th {
         background-color: #3498db !important;
         color: white !important;
@@ -176,7 +167,6 @@ st.markdown("""
         padding: 10px 15px;
     }
     
-    /* Button styling */
     .stButton > button {
         background-color: #3498db;
         color: white;
@@ -193,12 +183,10 @@ st.markdown("""
         box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
     }
     
-    /* Spacing */
     .spacing {
         margin-top: 2rem;
     }
     
-    /* Markdown text formatting */
     .markdown-text {
         line-height: 1.6;
         margin-bottom: 1rem;
@@ -213,7 +201,6 @@ st.markdown("""
         margin-bottom: 0.5rem;
     }
     
-    /* Remove forced color overrides - let Streamlit handle theme colors */
     [data-baseweb="input"],
     [data-baseweb="slider"],
     [data-baseweb="radio"] {
@@ -254,7 +241,6 @@ def load_sample_data():
     
     df = pd.DataFrame(data)
     
-    # Simulate churn based on business rules
     churn_prob = (
         (df['Tenure'] < 5) * 0.4 +
         (df['Complain'] == 1) * 0.3 +
@@ -265,20 +251,17 @@ def load_sample_data():
     
     return df
 
-# Helper function to get theme-aware plot template
 def get_plot_template():
     return 'plotly_white'
 
-# Load model and data
 model = load_model()
 df = load_sample_data()
 
-# Sidebar navigation
 with st.sidebar:
     st.markdown("""
     <div style='text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                 color: white; border-radius: 10px; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);'>
-        <h3 style='margin: 0; font-size: 1.5rem; color: white;'>E-Commerce Analytics</h3>
+        <h3 style='margin: 0; font-size: 1.5rem; color: white;'>E Commerce Analytics</h3>
         <p style='margin: 0; font-size: 0.9rem; opacity: 0.9; color: white;'>Customer Churn Prediction</p>
     </div>
     """, unsafe_allow_html=True)
@@ -292,7 +275,6 @@ with st.sidebar:
     
     st.markdown("---")
     
-    # Business parameters
     st.markdown("### Business Parameters")
     customer_lifetime_value = st.number_input(
         "Customer Lifetime Value (Rs.)",
@@ -337,9 +319,9 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-# Main content area
+#Main content area
 if page == "Business Overview":
-    st.markdown('<div class="main-header">E-Commerce Customer Churn Analytics</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header">E Commerce Customer Churn Analytics</div>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
     
@@ -372,7 +354,7 @@ if page == "Business Overview":
     
     with col1:
         st.markdown("### Challenge")
-        st.write("The e-commerce platform has experienced significant user growth but faces increasing customer churn. Current retention strategies lack personalization and data-driven targeting, reducing their effectiveness.")
+        st.write("The e commerce platform has experienced significant user growth but faces increasing customer churn. Current retention strategies lack personalization and data driven targeting, reducing their effectiveness.")
         
         st.markdown("### Solution")
         st.markdown("""
@@ -391,7 +373,7 @@ if page == "Business Overview":
         """)
     
     with col2:
-        # Quick churn distribution
+        #quick churn distribution
         fig = go.Figure(data=[
             go.Pie(
                 labels=['Retained', 'Churned'],
@@ -414,7 +396,7 @@ if page == "Business Overview":
     
     st.markdown('<div class="section-header">Key Metrics Distribution</div>', unsafe_allow_html=True)
     
-    # Feature distributions
+    #feature distributions
     features_to_plot = ['Tenure', 'CashbackAmount', 'DaySinceLastOrder', 'SatisfactionScore']
     
     fig = make_subplots(
@@ -457,16 +439,16 @@ elif page == "Model Analysis":
     st.markdown('<div class="main-header">Model Performance Analysis</div>', unsafe_allow_html=True)
     
     tab1, tab2, tab3, tab4 = st.tabs([
-        "📊 Performance Metrics", 
-        "🎯 Feature Importance", 
-        "🔍 Confusion Analysis", 
-        "📈 Model Comparison"
+        " Performance Metrics", 
+        " Feature Importance", 
+        " Confusion Analysis", 
+        " Model Comparison"
     ])
     
     with tab1:
         st.markdown('<div class="subsection-header">Model Performance Summary</div>', unsafe_allow_html=True)
         
-        # Simulated model performance metrics
+        #simulated model performance metrics
         performance_data = {
             'Metric': ['Accuracy', 'Precision', 'Recall', 'F1-Score', 'F2-Score', 'ROC-AUC'],
             'Value': [0.917, 0.693, 0.889, 0.779, 0.841, 0.964],
@@ -519,13 +501,13 @@ elif page == "Model Analysis":
         1. **Business Priority**: Missing a churning customer (false negative) costs significantly more than an unnecessary retention offer (false positive)
         2. **Recall Focus**: Gives twice the weight to recall compared to precision
         3. **Cost Sensitivity**: Aligns with business goal of aggressively reducing churn
-        4. **Resource Optimization**: Enables effective intervention on high-risk customers
+        4. **Resource Optimization**: Enables effective intervention on high risk customers
         """)
     
     with tab2:
         st.markdown('<div class="subsection-header">Feature Importance Analysis</div>', unsafe_allow_html=True)
         
-        # Feature importance data
+        #feature importance data
         feature_importance = {
             'Feature': [
                 'CashbackAmount', 'WarehouseToHome', 'Tenure', 'DaySinceLastOrder',
@@ -538,7 +520,7 @@ elif page == "Model Analysis":
         fi_df = pd.DataFrame(feature_importance)
         fi_df = fi_df.sort_values('Importance', ascending=True)
         
-        # Create feature importance plot
+        #create feature importance plot
         fig = go.Figure(data=[
             go.Bar(
                 y=fi_df['Feature'],
@@ -585,7 +567,7 @@ elif page == "Model Analysis":
         col1, col2, col3 = st.columns([1, 3, 1])
         
         with col2:
-            # Simulated confusion matrix
+            #confusion matrix
             cm = np.array([[503, 44], [12, 95]])
             
             fig = go.Figure(data=go.Heatmap(
@@ -610,7 +592,7 @@ elif page == "Model Analysis":
             
             st.plotly_chart(fig, use_container_width=True)
         
-        # Performance metrics from confusion matrix
+        
         tn, fp, fn, tp = cm.ravel()
         
         st.markdown('<div class="subsection-header">Performance Breakdown</div>', unsafe_allow_html=True)
@@ -627,7 +609,7 @@ elif page == "Model Analysis":
             st.metric("False Negatives", fn, "Missed churners")
         
         with col4:
-            st.metric("True Negatives", tn, "Correct non-churn predictions")
+            st.metric("True Negatives", tn, "Correct non churn predictions")
         
         st.markdown('<div class="subsection-header">Error Analysis</div>', unsafe_allow_html=True)
         
@@ -644,7 +626,7 @@ elif page == "Model Analysis":
             - Wasted marketing budget
             - No customer loss
             
-            **Acceptable trade-off** for higher recall
+            **Acceptable trade off** for higher recall
             """)
         
         with col2:
@@ -658,7 +640,7 @@ elif page == "Model Analysis":
             - Lost future revenue
             - Failed retention opportunity
             
-            **Minimized by F2-score optimization**
+            **Minimized by F2 score optimization**
             """)
     
     with tab4:
@@ -686,7 +668,7 @@ elif page == "Model Analysis":
             use_container_width=True
         )
         
-        # Visualization
+        #visualization
         fig = go.Figure()
         
         fig.add_trace(go.Scatter(
@@ -795,10 +777,10 @@ elif page == "Churn Prediction":
             'CashbackAmount': cashback_amount
         }
         
-        # Convert to DataFrame for display
+        #convert to DataFrame for display
         input_df = pd.DataFrame([input_data])
         
-        # Display input summary
+        #display input summary
         col1, col2 = st.columns([1, 1])
         
         with col1:
@@ -807,7 +789,7 @@ elif page == "Churn Prediction":
             st.dataframe(styled_df, use_container_width=True)
         
         with col2:
-            # Simulate prediction
+            #simulate prediction
             churn_probability = (
                 (tenure < 5) * 0.3 +
                 (has_complaint == 'Yes') * 0.25 +
@@ -839,7 +821,7 @@ elif page == "Churn Prediction":
                 </div>
                 """, unsafe_allow_html=True)
         
-        # Risk gauge
+        #risk gauge
         st.markdown("#### Risk Assessment")
         
         fig = go.Figure(go.Indicator(
@@ -870,7 +852,7 @@ elif page == "Churn Prediction":
         )
         st.plotly_chart(fig, use_container_width=True)
         
-        # Recommendations
+        #recommendations
         st.markdown("#### Retention Recommendations")
         
         if churn_prediction:
@@ -908,13 +890,13 @@ elif page == "Churn Prediction":
             - Regular promotional offers
             - Quarterly check-ins
             
-            **No immediate intervention required.** Focus resources on higher-risk customers.
+            **No immediate intervention required.** Focus resources on higher risk customers.
             """)
 
 elif page == "Financial Assessment":
     st.markdown('<div class="main-header">Financial Impact Assessment</div>', unsafe_allow_html=True)
     
-    # Simulation controls
+    #simulation controls
     st.markdown('<div class="subsection-header">Simulation Parameters</div>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
@@ -948,19 +930,18 @@ elif page == "Financial Assessment":
     
     st.markdown('<div class="subsection-header">Financial Simulation</div>', unsafe_allow_html=True)
     
-    # Calculate financial impact
+    #calculate financial impact
     actual_churners = int(num_customers * baseline_churn_rate)
     
-    # Using model metrics from analysis
-    model_recall = 0.889  # From model analysis
-    model_fpr = 0.08  # Estimated false positive rate
+    model_recall = 0.889  
+    model_fpr = 0.08  #estimated false positive rate
     
-    # Calculate predictions
+    #calculate predictions
     true_positives = int(actual_churners * model_recall)
     false_negatives = actual_churners - true_positives
     false_positives = int((num_customers - actual_churners) * model_fpr)
     
-    # Cost calculations
+    #cost calculations
     baseline_cost = actual_churners * customer_lifetime_value
     
     intervention_cost = (true_positives + false_positives) * retention_offer_cost
@@ -971,7 +952,7 @@ elif page == "Financial Assessment":
     net_savings = baseline_cost - model_cost
     roi = (net_savings / intervention_cost) * 100 if intervention_cost > 0 else 0
     
-    # Display results
+    #display results
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
@@ -1006,8 +987,8 @@ elif page == "Financial Assessment":
             delta_color="inverse" if net_savings < 0 else "normal"
         )
     
-    # Visualization
-    st.markdown('<div class="subsection-header">Cost-Benefit Analysis</div>', unsafe_allow_html=True)
+    #visualization
+    st.markdown('<div class="subsection-header">Cost Benefit Analysis</div>', unsafe_allow_html=True)
     
     fig = make_subplots(
         rows=1, cols=2,
@@ -1015,7 +996,7 @@ elif page == "Financial Assessment":
         specs=[[{'type': 'pie'}, {'type': 'bar'}]]
     )
     
-    # Pie chart - Cost breakdown
+    #pie chart 
     cost_labels = ['Retention Offers', 'Lost Revenue', 'Saved Revenue']
     cost_values = [intervention_cost, lost_revenue, saved_revenue]
     
@@ -1029,7 +1010,7 @@ elif page == "Financial Assessment":
         row=1, col=1
     )
     
-    # Bar chart - Financial comparison
+    #bar chart 
     scenarios = ['Baseline (No Model)', 'With Predictive Model']
     costs = [baseline_cost, model_cost]
     savings = [0, net_savings]
@@ -1066,7 +1047,7 @@ elif page == "Financial Assessment":
     
     st.plotly_chart(fig, use_container_width=True)
     
-    # Detailed breakdown
+    #detailed breakdown
     st.markdown('<div class="subsection-header">Detailed Breakdown</div>', unsafe_allow_html=True)
     
     breakdown_data = {
@@ -1104,13 +1085,12 @@ elif page == "Financial Assessment":
         height=300
     )
     
-    # Sensitivity analysis
+    #sensitivity analysis
     st.markdown('<div class="subsection-header">Sensitivity Analysis</div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
     with col1:
-        # Vary retention success rate
         success_rates = np.arange(0.5, 0.95, 0.05)
         savings_by_success = []
         
@@ -1138,7 +1118,6 @@ elif page == "Financial Assessment":
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
-        # Vary model precision
         precisions = np.arange(0.5, 0.95, 0.05)
         savings_by_precision = []
         
@@ -1167,7 +1146,7 @@ elif page == "Financial Assessment":
         )
         st.plotly_chart(fig, use_container_width=True)
     
-    # Key takeaways
+    #key takeaways
     st.markdown('<div class="subsection-header">Key Financial Insights</div>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
@@ -1210,12 +1189,12 @@ elif page == "Financial Assessment":
         **Efficiency: {'Good' if efficiency > 0.6 else 'Needs Improvement'}**
         """)
 
-# Footer
-st.markdown("---")
-col1, col2, col3 = st.columns([2, 1, 2])
-with col2:
-    st.markdown("""
-    <div style='text-align: center; opacity: 0.6; font-size: 0.85rem;'>
-        E-Commerce Churn Analytics Dashboard
-    </div>
-    """, unsafe_allow_html=True)
+# #footer
+# st.markdown("---")
+# col1, col2, col3 = st.columns([2, 1, 2])
+# with col2:
+#     st.markdown("""
+#     <div style='text-align: center; opacity: 0.6; font-size: 0.85rem;'>
+#         E-Commerce Churn Analytics Dashboard
+#     </div>
+#     """, unsafe_allow_html=True)
