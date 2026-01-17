@@ -48,7 +48,7 @@ Despite significant user growth, e commerce platforms face critical customer chu
 
 ### 2. Class Imbalance Handling
 Tested 6 sampling techniques - **RandomOverSampler** selected for best F2 performance:
-- RandomOverSampler ✅
+- RandomOverSampler (Selected)
 - SMOTE
 - BorderlineSMOTE
 - ClusterCentroids
@@ -60,7 +60,7 @@ Evaluated 8 algorithms with 5-fold Stratified Cross-Validation:
 
 | Model | F2 Score | Selected |
 |-------|----------|----------|
-| **LightGBM** | **0.892** | ✅ |
+| **LightGBM** | **0.892** | * |
 | XGBoost | 0.886 | |
 | Logistic Regression | 0.822 | |
 | Decision Tree | 0.665 | |
@@ -93,7 +93,7 @@ Best Parameters:
 ### Final Metrics (Test Set)
 | Metric | Score |
 |--------|-------|
-| **F2 Score** | **0.841** ⭐ |
+| **F2 Score** | **0.841** |
 | **Recall** | **88.8%** |
 | **Precision** | 69.3% |
 | **Accuracy** | 91.7% |
@@ -128,7 +128,7 @@ Best Parameters:
 | Successfully Retained (70%) | 95 customers |
 | Revenue Saved | Rs. 115,079 |
 | **Net Profit** | **Rs. 108,229** |
-| **ROI** | **1,580%** 🚀 |
+| **ROI** | **1,580%** |
 
 ## Key Insights
 
@@ -255,10 +255,9 @@ predictive-customer-churn-ecommerce-retention/
 ├── Dataset/
 │   └── data_ecommerce_customer_churn.csv
 ├── Final_report_and_analysis/
-│   └── customer_churn.ipynb
+│   └── Final_report.ipynb
 ├── Reports/
-│   ├── churn_prediction_report.pdf
-│   └── business_recommendations.pdf
+│   ├── images  
 ├── app.py                          # Streamlit application
 ├── churn_model_final.pkl          # Trained model
 ├── requirements.txt               # Python dependencies
@@ -325,7 +324,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-⭐ **If this project helps you, please give it a star!** ⭐
+ **If this project helps you, please give it a star!** 
 
 **Last Updated:** January 2026
 ```
