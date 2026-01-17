@@ -1,20 +1,20 @@
 # Predictive Customer Churn Modeling for E-commerce Retention Strategy
 
 ## Project Overview
-End-to-end machine learning pipeline for predicting customer churn in e-commerce, with business impact analysis and actionable insights.
+End to end machine learning pipeline for predicting customer churn in e commerce, with business impact analysis and actionable insights.
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://predictive-customer-churn-ecommerce-retention.streamlit.app/)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Business Problem
-Despite significant user growth, e-commerce platforms face critical customer churn challenges:
+Despite significant user growth, e commerce platforms face critical customer churn challenges:
 - Generic promotions lack personalization
-- Unable to distinguish high-risk customers from loyal ones
+- Unable to distinguish high risk customers from loyal ones
 - Marketing resources wasted on unnecessary retention efforts
 - Lost revenue from preventable customer churn
 
-**Solution:** Machine learning model to identify at-risk customers and enable targeted retention strategies.
+**Solution:** Machine learning model to identify at risk customers and enable targeted retention strategies.
 
 ## Dataset
 - **Source:** HackerEarth ML Challenge 2021 - "How NOT to lose a customer in 10 days"
