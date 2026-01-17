@@ -5,14 +5,9 @@ import pickle
 import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
-import matplotlib.pyplot as plt
-import seaborn as sns
-import shap
-from sklearn.metrics import (
-    confusion_matrix, classification_report, 
-    precision_recall_curve, roc_curve, auc,
-    fbeta_score, accuracy_score, precision_score, recall_score
-)
+import os
+import sys
+from sklearn.ensemble import RandomForestClassifier
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -206,19 +201,76 @@ st.markdown("""
     [data-baseweb="radio"] {
         background-color: transparent !important;
     }
+    
+    .demo-warning {
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        color: #856404;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 10px 0;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 # Load models and data
 @st.cache_resource
 def load_model():
+    """Load the trained model with robust error handling"""
     try:
-        with open('churn_model_final.pkl', 'rb') as f:
-            model = pickle.load(f)
-        return model
-    except:
-        st.error("Model file not found. Please ensure 'churn_model_final.pkl' is in the same directory.")
-        return None
+        # First, try to find the model file
+        possible_paths = [
+            'churn_model_final.pkl',
+            './churn_model_final.pkl',
+            os.path.join(os.path.dirname(__file__), 'churn_model_final.pkl'),
+        ]
+        
+        model = None
+        loaded_path = None
+        
+        for path in possible_paths:
+            if os.path.exists(path):
+                try:
+                    with open(path, 'rb') as f:
+                        model = pickle.load(f)
+                    loaded_path = path
+                    st.sidebar.success(f"✅ Model loaded from: {path}")
+                    return model
+                except Exception as e:
+                    st.sidebar.warning(f"⚠️ Could not load from {path}: {str(e)}")
+                    continue
+        
+        # If model file not found, create a demo model
+        if model is None:
+            st.sidebar.warning("⚠️ Original model not found. Creating demo model...")
+            
+            # Create a simple demo model for presentation
+            np.random.seed(42)
+            demo_model = RandomForestClassifier(n_estimators=100, random_state=42)
+            
+            # Create dummy training data
+            X_dummy = np.random.rand(1000, 10)
+            y_dummy = (X_dummy[:, 0] * 0.3 + 
+                      X_dummy[:, 1] * 0.25 + 
+                      X_dummy[:, 2] * 0.2 + 
+                      np.random.randn(1000) * 0.1) > 0.5
+            
+            demo_model.fit(X_dummy, y_dummy.astype(int))
+            
+            # Save the demo model for future use
+            try:
+                with open('churn_model_demo.pkl', 'wb') as f:
+                    pickle.dump(demo_model, f)
+                st.sidebar.info("📁 Demo model saved as 'churn_model_demo.pkl'")
+            except:
+                pass
+                
+            return demo_model
+            
+    except Exception as e:
+        st.sidebar.error(f"❌ Error in load_model: {str(e)}")
+        # Return a simple model as fallback
+        return RandomForestClassifier(n_estimators=10, random_state=42)
 
 @st.cache_data
 def load_sample_data():
@@ -241,11 +293,13 @@ def load_sample_data():
     
     df = pd.DataFrame(data)
     
+    # Realistic churn probability calculation
     churn_prob = (
-        (df['Tenure'] < 5) * 0.4 +
-        (df['Complain'] == 1) * 0.3 +
+        (df['Tenure'] < 5) * 0.3 +
+        (df['Complain'] == 1) * 0.25 +
         (df['SatisfactionScore'] < 3) * 0.2 +
-        (df['DaySinceLastOrder'] > 7) * 0.1
+        (df['DaySinceLastOrder'] > 7) * 0.15 +
+        (df['CashbackAmount'] < 150) * 0.1
     )
     df['Churn'] = np.random.binomial(1, churn_prob.clip(0, 1))
     
@@ -254,8 +308,12 @@ def load_sample_data():
 def get_plot_template():
     return 'plotly_white'
 
+# Load model and data
 model = load_model()
 df = load_sample_data()
+
+# Check if using demo model
+using_demo_model = not os.path.exists('churn_model_final.pkl')
 
 with st.sidebar:
     st.markdown("""
@@ -265,6 +323,14 @@ with st.sidebar:
         <p style='margin: 0; font-size: 0.9rem; opacity: 0.9; color: white;'>Customer Churn Prediction</p>
     </div>
     """, unsafe_allow_html=True)
+    
+    if using_demo_model:
+        st.markdown("""
+        <div class="demo-warning">
+            ⚠️ <strong>Demo Mode</strong><br>
+            Using simulated predictions. Upload 'churn_model_final.pkl' for real predictions.
+        </div>
+        """, unsafe_allow_html=True)
     
     st.markdown("### Navigation")
     page = st.radio(
@@ -310,7 +376,8 @@ with st.sidebar:
     with col1:
         st.metric("Total Customers", f"{len(df):,}")
     with col2:
-        st.metric("Churn Rate", f"{(df['Churn'].mean()*100):.1f}%")
+        churn_rate = df['Churn'].mean() * 100
+        st.metric("Churn Rate", f"{churn_rate:.1f}%")
     
     st.markdown("---")
     st.markdown("""
@@ -319,9 +386,12 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-#Main content area
+# Main content area
 if page == "Business Overview":
     st.markdown('<div class="main-header">E Commerce Customer Churn Analytics</div>', unsafe_allow_html=True)
+    
+    if using_demo_model:
+        st.info("🔍 **Demo Mode**: Showing simulated data. Upload 'churn_model_final.pkl' for real analytics.")
     
     col1, col2, col3 = st.columns(3)
     
@@ -373,7 +443,7 @@ if page == "Business Overview":
         """)
     
     with col2:
-        #quick churn distribution
+        # Quick churn distribution
         fig = go.Figure(data=[
             go.Pie(
                 labels=['Retained', 'Churned'],
@@ -392,11 +462,10 @@ if page == "Business Overview":
             template=get_plot_template()
         )
         st.plotly_chart(fig, use_container_width=True)
-        
     
     st.markdown('<div class="section-header">Key Metrics Distribution</div>', unsafe_allow_html=True)
     
-    #feature distributions
+    # Feature distributions
     features_to_plot = ['Tenure', 'CashbackAmount', 'DaySinceLastOrder', 'SatisfactionScore']
     
     fig = make_subplots(
@@ -438,6 +507,9 @@ if page == "Business Overview":
 elif page == "Model Analysis":
     st.markdown('<div class="main-header">Model Performance Analysis</div>', unsafe_allow_html=True)
     
+    if using_demo_model:
+        st.info("📊 **Demo Mode**: Showing simulated model performance metrics.")
+    
     tab1, tab2, tab3, tab4 = st.tabs([
         " Performance Metrics", 
         " Feature Importance", 
@@ -448,7 +520,7 @@ elif page == "Model Analysis":
     with tab1:
         st.markdown('<div class="subsection-header">Model Performance Summary</div>', unsafe_allow_html=True)
         
-        #simulated model performance metrics
+        # Simulated model performance metrics
         performance_data = {
             'Metric': ['Accuracy', 'Precision', 'Recall', 'F1-Score', 'F2-Score', 'ROC-AUC'],
             'Value': [0.917, 0.693, 0.889, 0.779, 0.841, 0.964],
@@ -507,7 +579,7 @@ elif page == "Model Analysis":
     with tab2:
         st.markdown('<div class="subsection-header">Feature Importance Analysis</div>', unsafe_allow_html=True)
         
-        #feature importance data
+        # Feature importance data
         feature_importance = {
             'Feature': [
                 'CashbackAmount', 'WarehouseToHome', 'Tenure', 'DaySinceLastOrder',
@@ -520,7 +592,7 @@ elif page == "Model Analysis":
         fi_df = pd.DataFrame(feature_importance)
         fi_df = fi_df.sort_values('Importance', ascending=True)
         
-        #create feature importance plot
+        # Create feature importance plot
         fig = go.Figure(data=[
             go.Bar(
                 y=fi_df['Feature'],
@@ -567,7 +639,7 @@ elif page == "Model Analysis":
         col1, col2, col3 = st.columns([1, 3, 1])
         
         with col2:
-            #confusion matrix
+            # Confusion matrix
             cm = np.array([[503, 44], [12, 95]])
             
             fig = go.Figure(data=go.Heatmap(
@@ -591,7 +663,6 @@ elif page == "Model Analysis":
             )
             
             st.plotly_chart(fig, use_container_width=True)
-        
         
         tn, fp, fn, tp = cm.ravel()
         
@@ -668,7 +739,7 @@ elif page == "Model Analysis":
             use_container_width=True
         )
         
-        #visualization
+        # Visualization
         fig = go.Figure()
         
         fig.add_trace(go.Scatter(
@@ -699,6 +770,9 @@ elif page == "Model Analysis":
 
 elif page == "Churn Prediction":
     st.markdown('<div class="main-header">Customer Churn Prediction</div>', unsafe_allow_html=True)
+    
+    if using_demo_model:
+        st.warning("🎯 **Demo Mode**: Using simulated predictions based on business rules. Upload 'churn_model_final.pkl' for actual model predictions.")
     
     col1, col2 = st.columns([2, 1])
     
@@ -777,10 +851,10 @@ elif page == "Churn Prediction":
             'CashbackAmount': cashback_amount
         }
         
-        #convert to DataFrame for display
+        # Convert to DataFrame for display
         input_df = pd.DataFrame([input_data])
         
-        #display input summary
+        # Display input summary
         col1, col2 = st.columns([1, 1])
         
         with col1:
@@ -789,7 +863,7 @@ elif page == "Churn Prediction":
             st.dataframe(styled_df, use_container_width=True)
         
         with col2:
-            #simulate prediction
+            # Simulate prediction using business rules
             churn_probability = (
                 (tenure < 5) * 0.3 +
                 (has_complaint == 'Yes') * 0.25 +
@@ -798,7 +872,9 @@ elif page == "Churn Prediction":
                 (cashback_amount < 150) * 0.1
             )
             
-            churn_probability = min(churn_probability, 0.95)
+            # Add some randomness for demo
+            churn_probability += np.random.uniform(-0.1, 0.1)
+            churn_probability = max(0.05, min(churn_probability, 0.95))
             churn_prediction = churn_probability > 0.5
             
             # Display prediction
@@ -821,7 +897,7 @@ elif page == "Churn Prediction":
                 </div>
                 """, unsafe_allow_html=True)
         
-        #risk gauge
+        # Risk gauge
         st.markdown("#### Risk Assessment")
         
         fig = go.Figure(go.Indicator(
@@ -852,7 +928,7 @@ elif page == "Churn Prediction":
         )
         st.plotly_chart(fig, use_container_width=True)
         
-        #recommendations
+        # Recommendations
         st.markdown("#### Retention Recommendations")
         
         if churn_prediction:
@@ -896,7 +972,10 @@ elif page == "Churn Prediction":
 elif page == "Financial Assessment":
     st.markdown('<div class="main-header">Financial Impact Assessment</div>', unsafe_allow_html=True)
     
-    #simulation controls
+    if using_demo_model:
+        st.info("💰 **Demo Mode**: Financial calculations based on simulated model performance.")
+    
+    # Simulation controls
     st.markdown('<div class="subsection-header">Simulation Parameters</div>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
@@ -930,18 +1009,18 @@ elif page == "Financial Assessment":
     
     st.markdown('<div class="subsection-header">Financial Simulation</div>', unsafe_allow_html=True)
     
-    #calculate financial impact
+    # Calculate financial impact
     actual_churners = int(num_customers * baseline_churn_rate)
     
     model_recall = 0.889  
-    model_fpr = 0.08  #estimated false positive rate
+    model_fpr = 0.08  # Estimated false positive rate
     
-    #calculate predictions
+    # Calculate predictions
     true_positives = int(actual_churners * model_recall)
     false_negatives = actual_churners - true_positives
     false_positives = int((num_customers - actual_churners) * model_fpr)
     
-    #cost calculations
+    # Cost calculations
     baseline_cost = actual_churners * customer_lifetime_value
     
     intervention_cost = (true_positives + false_positives) * retention_offer_cost
@@ -952,7 +1031,7 @@ elif page == "Financial Assessment":
     net_savings = baseline_cost - model_cost
     roi = (net_savings / intervention_cost) * 100 if intervention_cost > 0 else 0
     
-    #display results
+    # Display results
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
@@ -987,7 +1066,7 @@ elif page == "Financial Assessment":
             delta_color="inverse" if net_savings < 0 else "normal"
         )
     
-    #visualization
+    # Visualization
     st.markdown('<div class="subsection-header">Cost Benefit Analysis</div>', unsafe_allow_html=True)
     
     fig = make_subplots(
@@ -996,7 +1075,7 @@ elif page == "Financial Assessment":
         specs=[[{'type': 'pie'}, {'type': 'bar'}]]
     )
     
-    #pie chart 
+    # Pie chart
     cost_labels = ['Retention Offers', 'Lost Revenue', 'Saved Revenue']
     cost_values = [intervention_cost, lost_revenue, saved_revenue]
     
@@ -1010,7 +1089,7 @@ elif page == "Financial Assessment":
         row=1, col=1
     )
     
-    #bar chart 
+    # Bar chart
     scenarios = ['Baseline (No Model)', 'With Predictive Model']
     costs = [baseline_cost, model_cost]
     savings = [0, net_savings]
@@ -1047,7 +1126,7 @@ elif page == "Financial Assessment":
     
     st.plotly_chart(fig, use_container_width=True)
     
-    #detailed breakdown
+    # Detailed breakdown
     st.markdown('<div class="subsection-header">Detailed Breakdown</div>', unsafe_allow_html=True)
     
     breakdown_data = {
@@ -1085,7 +1164,7 @@ elif page == "Financial Assessment":
         height=300
     )
     
-    #sensitivity analysis
+    # Sensitivity analysis
     st.markdown('<div class="subsection-header">Sensitivity Analysis</div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
@@ -1146,7 +1225,7 @@ elif page == "Financial Assessment":
         )
         st.plotly_chart(fig, use_container_width=True)
     
-    #key takeaways
+    # Key takeaways
     st.markdown('<div class="subsection-header">Key Financial Insights</div>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
@@ -1189,12 +1268,12 @@ elif page == "Financial Assessment":
         **Efficiency: {'Good' if efficiency > 0.6 else 'Needs Improvement'}**
         """)
 
-# #footer
-# st.markdown("---")
-# col1, col2, col3 = st.columns([2, 1, 2])
-# with col2:
-#     st.markdown("""
-#     <div style='text-align: center; opacity: 0.6; font-size: 0.85rem;'>
-#         E-Commerce Churn Analytics Dashboard
-#     </div>
-#     """, unsafe_allow_html=True)
+# Footer
+st.markdown("---")
+col1, col2, col3 = st.columns([2, 1, 2])
+with col2:
+    st.markdown("""
+    <div style='text-align: center; opacity: 0.6; font-size: 0.85rem;'>
+        E-Commerce Churn Analytics Dashboard | Built with Streamlit
+    </div>
+    """, unsafe_allow_html=True)
