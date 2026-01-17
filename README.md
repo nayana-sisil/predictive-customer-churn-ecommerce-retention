@@ -56,18 +56,18 @@ Tested 6 sampling techniques - **RandomOverSampler** selected for best F2 perfor
 - NearMiss
 
 ### 3. Model Selection & Evaluation
-Evaluated 8 algorithms with 5-fold Stratified Cross-Validation:
+Evaluated 8 algorithms with 5 fold Stratified Cross Validation:
 
-| Model | F2 Score | Selected |
-|-------|----------|----------|
-| **LightGBM** | **0.892** | * |
-| XGBoost | 0.886 | |
-| Logistic Regression | 0.822 | |
-| Decision Tree | 0.665 | |
-| Ada Boost | 0.663 | |
-| Gradient Boosting | 0.611 | |
-| Random Forest | 0.591 | |
-| KNN | 0.466 | |
+| Model | F2 Score | 
+|-------|----------|
+| **LightGBM** | **0.892** | 
+| XGBoost | 0.886 | 
+| Logistic Regression | 0.822 | 
+| Decision Tree | 0.665 | 
+| Ada Boost | 0.663 | 
+| Gradient Boosting | 0.611 | 
+| Random Forest | 0.591 | 
+| KNN | 0.466 | 
 
 ### 4. Hyperparameter Tuning
 **RandomizedSearchCV** with F2 score optimization (β=2):
