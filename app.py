@@ -328,6 +328,107 @@ st.markdown("""
 
 
 
+[data-testid="stNumberInput"] {
+    background-color: transparent !important;
+}
+
+[data-testid="stNumberInput"] > div {
+    background-color: transparent !important;
+    padding: 0 !important;
+}
+
+[data-testid="stNumberInput"] > div > div {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+[data-testid="stNumberInput"] input {
+    background-color: white !important;
+    border: 1px solid #ced4da !important;
+    border-radius: 4px !important;
+    padding: 0.5rem !important;
+}
+
+
+[data-testid="stSlider"] {
+    background-color: transparent !important;
+}
+
+[data-testid="stSlider"] > div {
+    background-color: transparent !important;
+    padding: 0 !important;
+}
+
+[data-testid="stSlider"] > div > div {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+
+[data-testid="stPlotlyChart"] {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+[data-testid="stPlotlyChart"] > div {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.modebar {
+    background-color: transparent !important;
+}
+
+
+[data-testid="stRadio"] > div {
+    background-color: transparent !important;
+    padding: 0.5rem 0 !important;
+    border: none !important;
+}
+
+
+.stForm {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stNumberInput"],
+[data-testid="stSidebar"] [data-testid="stSlider"],
+[data-testid="stSidebar"] [data-testid="stRadio"] {
+    background-color: transparent !important;
+}
+
+/* Remove any default Streamlit widget backgrounds */
+[data-testid="stSidebar"] .stNumberInput,
+[data-testid="stSidebar"] .stSlider,
+[data-testid="stSidebar"] .stRadio {
+    background-color: transparent !important;
+}
+
+
+[data-testid="stMetricValue"] {
+    background-color: transparent !important;
+}
+
+
+/* Force remove all widget containers backgrounds */
+[data-baseweb="input"],
+[data-baseweb="slider"],
+[data-baseweb="radio"] {
+    background-color: transparent !important;
+}
+
+/* Remove any residual borders */
+.st-emotion-cache-* {
+    border: none !important;
+}
+
+
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -622,7 +723,7 @@ elif page == "Model Analysis":
                 perf_df.style.format({'Value': '{:.3f}'})
                 .background_gradient(subset=['Value'], cmap='Blues'),
                 use_container_width=True,
-                height=300
+                # height=300
             )
         
         with col2:
@@ -710,15 +811,16 @@ elif page == "Model Analysis":
         col1, col2 = st.columns(2)
         
         with col1:
-            st.markdown("#### Key Insights")
+            # st.markdown("#### Key Insights")
             st.markdown("""
-            <div class="markdown-text" style='background-color: #f8f9fa; padding: 15px; border-radius: 10px;'>
-            - **CashbackAmount**: Most influential feature - incentives strongly affect retention
-            - **WarehouseToHome**: Delivery distance impacts customer satisfaction
-            - **Tenure**: Longer tenured customers are more loyal
-            - **Recent Activity**: DaySinceLastOrder is critical for churn prediction
-            </div>
-            """, unsafe_allow_html=True)
+            ### Key Insights
+
+            - **CashbackAmount**: Most influential feature – incentives strongly affect retention  
+            - **WarehouseToHome**: Delivery distance impacts customer satisfaction  
+            - **Tenure**: Longer-tenured customers are more loyal  
+            - **Recent Activity**: *DaySinceLastOrder* is critical for churn prediction
+            """)
+
         
         with col2:
             st.markdown("#### Business Implications")
@@ -846,7 +948,7 @@ elif page == "Model Analysis":
         st.dataframe(
             styled_df,
             use_container_width=True,
-            height=300
+            # height=300
         )
         
         # Visualization
