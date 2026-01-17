@@ -16,10 +16,9 @@ from sklearn.metrics import (
 import warnings
 warnings.filterwarnings('ignore')
 
-# Force light mode by setting theme in config
 st.set_page_config(
     page_title="E-Commerce Customer Churn Analytics",
-    page_icon="📊",
+    # page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -443,17 +442,17 @@ if page == "Business Overview":
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+        # st.markdown('<div class="metric-card">', unsafe_allow_html=True)
         st.metric(
             "Current Churn Rate",
             f"{df['Churn'].mean()*100:.1f}%",
             delta=f"-{5.2:.1f}% target",
             delta_color="inverse"
         )
-        st.markdown('</div>', unsafe_allow_html=True)
+        # st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+        # st.markdown('<div class="metric-card">', unsafe_allow_html=True)
         revenue_at_risk = df['Churn'].sum() * customer_lifetime_value
         st.metric(
             "Revenue at Risk",
@@ -461,10 +460,10 @@ if page == "Business Overview":
             delta=f"-Rs.{(revenue_at_risk * 0.3):,.0f}",
             delta_color="inverse"
         )
-        st.markdown('</div>', unsafe_allow_html=True)
+        # st.markdown('</div>', unsafe_allow_html=True)
     
     with col3:
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+        # st.markdown('<div class="metric-card">', unsafe_allow_html=True)
         st.metric(
             "Model Coverage",
             "88.9%",
@@ -473,7 +472,7 @@ if page == "Business Overview":
         )
         st.markdown('</div>', unsafe_allow_html=True)
     
-    st.markdown('<div class="section-header">Business Context</div>', unsafe_allow_html=True)
+    # st.markdown('<div class="section-header">Business Context</div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns([2, 1])
     
@@ -484,7 +483,7 @@ if page == "Business Overview":
 
         <h3>Challenge</h3>
         <p>
-        The e-commerce platform has experienced significant user growth but faces increasing customer churn.
+        The e commerce platform has experienced significant user growth but faces increasing customer churn.
         Current retention strategies lack personalization and data-driven targeting, reducing their effectiveness.
         </p>
 
@@ -582,10 +581,10 @@ elif page == "Model Analysis":
     # Create tabs with proper spacing
     st.markdown('<div class="tab-content">', unsafe_allow_html=True)
     tab1, tab2, tab3, tab4 = st.tabs([
-        "📊 Performance Metrics", 
-        "🎯 Feature Importance", 
-        "🔍 Confusion Analysis", 
-        "📈 Model Comparison"
+        " Performance Metrics", 
+        " Feature Importance", 
+        " Confusion Analysis", 
+        " Model Comparison"
     ])
     
     with tab1:
