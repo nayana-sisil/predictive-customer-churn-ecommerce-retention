@@ -214,21 +214,15 @@ st.markdown("""
 def load_model():
     import os
     try:
-        # Get the directory where app.py is located
         current_dir = os.path.dirname(os.path.abspath(__file__))
         model_path = os.path.join(current_dir, 'churn_model_final.pkl')
-        
-        # Debug: Show what files exist
-        st.write(f"Looking for model at: {model_path}")
-        st.write(f"Current directory: {current_dir}")
-        st.write(f"Files in directory: {os.listdir(current_dir)}")
         
         with open(model_path, 'rb') as f:
             model = pickle.load(f)
         return model
     except Exception as e:
-        st.error(f"Model file not found. Error: {str(e)}")
-        st.info("Please ensure 'churn_model_final.pkl' is in the same directory as app.py")
+        st.error(f"Error loading model: {str(e)}")
+        st.info("Running in demo mode without the trained model.")
         return None
 
 @st.cache_data
