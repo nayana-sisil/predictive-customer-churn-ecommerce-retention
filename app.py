@@ -138,13 +138,17 @@ st.markdown("""
     
     /* Plot containers */
     .plot-container {
-        background-color: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        margin-bottom: 1.5rem;
-        border: 1px solid #e0e0e0;
-    }
+    background-color: #ffffff;
+    padding: 16px;
+    border-radius: 10px;
+    border-left: 4px solid #3498db;
+    border-top: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: none;
+    margin-bottom: 1.5rem;
+}
+
     
     /* Financial assessment styling */
     .savings-positive {
@@ -321,6 +325,9 @@ st.markdown("""
     .markdown-text li {
         margin-bottom: 0.5rem;
     }
+
+
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -528,6 +535,7 @@ if page == "Business Overview":
             paper_bgcolor='white'
         )
         st.plotly_chart(fig, use_container_width=True)
+        
     
     st.markdown('<div class="section-header">Key Metrics Distribution</div>', unsafe_allow_html=True)
     
