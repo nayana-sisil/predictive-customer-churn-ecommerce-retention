@@ -825,16 +825,16 @@ elif page == "Model Analysis":
         with col2:
             st.markdown("#### Business Implications")
             st.markdown("""
-            <div class="markdown-text" style='background-color: #f8f9fa; padding: 15px; border-radius: 10px;'>
-            1. **Enhance Loyalty Programs**: Focus on cashback and rewards
-            
-            2. **Optimize Logistics**: Reduce delivery distance impact
-            
-            3. **Early Intervention**: Target new customers with onboarding
-            
-            4. **Proactive Engagement**: Monitor recent purchase patterns
+            <div style="background-color:#f8f9fa; padding:15px; border-radius:10px;">
+                <ol>
+                    <li><strong>Enhance Loyalty Programs</strong>: Focus on cashback and rewards</li>
+                    <li><strong>Optimize Logistics</strong>: Reduce delivery distance impact</li>
+                    <li><strong>Early Intervention</strong>: Target new customers with onboarding</li>
+                    <li><strong>Proactive Engagement</strong>: Monitor recent purchase patterns</li>
+                </ol>
             </div>
             """, unsafe_allow_html=True)
+
     
     with tab3:
         st.markdown('<div class="subsection-header">Confusion Matrix Analysis</div>', unsafe_allow_html=True)
@@ -1474,7 +1474,7 @@ elif page == "Financial Assessment":
     with col1:
         st.markdown(f"""
         <div style='background-color: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #e0e0e0;'>
-        **Cost Efficiency**
+        
         
         For every Rs.{retention_offer_cost:,} spent on retention offers:
         
@@ -1489,7 +1489,7 @@ elif page == "Financial Assessment":
     with col2:
         st.markdown(f"""
         <div style='background-color: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #e0e0e0;'>
-        **Risk Coverage**
+        
         
         Model identifies:
         
@@ -1505,7 +1505,7 @@ elif page == "Financial Assessment":
         efficiency = true_positives / (true_positives + false_positives) if (true_positives + false_positives) > 0 else 0
         st.markdown(f"""
         <div style='background-color: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #e0e0e0;'>
-        **Offer Efficiency**
+        
         
         Retention offers are:
         
