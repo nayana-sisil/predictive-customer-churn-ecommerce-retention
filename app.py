@@ -211,7 +211,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Load models and data
-@st.cache_resource
+
 @st.cache_resource
 def load_model():
     try:
