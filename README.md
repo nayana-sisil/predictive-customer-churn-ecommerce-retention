@@ -109,7 +109,7 @@ Best Parameters:
 ### Why F2 Score?
 - Prioritizes **Recall** over Precision
 - Missing a churner costs more than unnecessary retention offer
-- Enables early intervention for at-risk customers
+- Enables early intervention for at risk customers
 - Aligns with business goal: maximize customer retention
 
 ## Business Impact Analysis
@@ -151,39 +151,39 @@ Best Parameters:
 ## Business Recommendations
 
 ### 1. Early Tenure Customer Retention
-- Implement 60-day onboarding programs
+- Implement 60 day onboarding programs
 - Offer targeted promotions for customers <2 months
-- Proactive check-ins at 30 and 45 days
+- Proactive check ins at 30 and 45 days
 - Celebrate early wins with rewards
 
 ### 2. Enhance Complaint Resolution
-- 24-hour SLA for initial response, 72-hour resolution
+- 24 hour SLA(Service Level Agreement) for initial response, 72 hour resolution
 - Proactive sentiment analysis on communications
-- Standardized compensation framework
-- Closed-loop feedback post-resolution
+- Standardized compensation framework(Customers get refunds / credits / benefits based on clear rules)
+- Closed loop feedback post resolution(After the issue is fixed,ask for customer feedback)
 
 ### 3. Optimize Cashback & Loyalty
 - Personalized cashback tiers based on behavior
-- "Win-back" offers for high-risk customers
-- Reward non-purchase behaviors (reviews, referrals)
+- "Win back" offers for high risk customers
+- Reward non purchase behaviors (reviews, referrals)
 - Improve cashback visibility in dashboard
 
 ### 4. Improve Delivery Experience
 - Partner with regional logistics for localized fulfillment
-- Real-time tracking with proactive delay notifications
-- Offer flat-rate/free shipping subscriptions
+- Real time tracking with proactive delay notifications
+- Offer flat rate/free shipping subscriptions
 - Flexible delivery windows and locations
 
 ### 5. Targeted Retention Campaigns
-- **High Risk (>0.7):** Personal outreach + high-value offers
+- **High Risk (>0.7):** Personal outreach + high value offers
 - **Medium Risk (0.4-0.7):** Automated campaigns + moderate incentives
 - **Low Risk (<0.4):** General loyalty engagement
 
 ### 6. Implementation Timeline
-- **Immediate (0-30 days):** Deploy scoring, high-risk outreach
-- **Short-term (1-3 months):** Automated campaigns, optimize cashback
-- **Medium-term (3-6 months):** Onboarding program, delivery enhancement
-- **Long-term (6-12 months):** Product improvements, advanced personalization
+- **Immediate (0-30 days):** Deploy scoring, high risk outreach
+- **Short term (1-3 months):** Automated campaigns, optimize cashback
+- **Medium term (3-6 months):** Onboarding program, delivery enhancement
+- **Long term (6-12 months):** Product improvements, advanced personalization
 
 ## Installation & Setup
 
@@ -288,10 +288,10 @@ predictive-customer-churn-ecommerce-retention/
 - **Pickle** - Model serialization
 
 ## Future Enhancements
-- [ ] Real-time prediction API (FastAPI)
-- [ ] Multi-model ensemble approach
+- [ ] Real time prediction API (FastAPI)
+- [ ] Multi model ensemble approach
 - [ ] Customer segmentation clustering
-- [ ] Time-series churn forecasting
+- [ ] Time series churn forecasting
 - [ ] A/B testing framework
 - [ ] Deep learning models (LSTM/Transformers)
 - [ ] Automated retraining pipeline
